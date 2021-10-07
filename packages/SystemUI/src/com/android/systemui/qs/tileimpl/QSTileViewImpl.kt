@@ -125,7 +125,7 @@ constructor(
     private val colorOffstate = Utils.getColorAttrDefaultColor(context, R.attr.shadeInactive)
     private val colorInactive = if (isRoundQS()) Utils.applyAlpha(INACTIVE_ALPHA, colorOffstate)
             else colorOffstate
-    private val colorUnavailable = Utils.getColorAttrDefaultColor(context, R.attr.shadeDisabled)
+    private val colorUnavailable = Utils.applyAlpha(UNAVAILABLE_ALPHA, colorInactive)
 
     private val overlayColorActive =
         Utils.applyAlpha(
