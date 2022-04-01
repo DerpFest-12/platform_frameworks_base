@@ -145,7 +145,7 @@ public class QuickQSPanelController extends QSPanelControllerBase<QuickQSPanel> 
             mView.setSceneContainerEnabled(mSceneContainerEnabled);
             updateBrightnessMirror();
         });
-
+        mView.updateColumns();
         mBrightnessMirrorHandler.onQsPanelAttached();
     }
 
@@ -185,6 +185,7 @@ public class QuickQSPanelController extends QSPanelControllerBase<QuickQSPanel> 
 
     private void setMaxTiles(int parseNumTiles) {
         mView.setMaxTiles(parseNumTiles);
+        mView.updateColumns();
         setTiles();
     }
 
@@ -201,6 +202,7 @@ public class QuickQSPanelController extends QSPanelControllerBase<QuickQSPanel> 
             setMaxTiles(newMaxTiles);
         }
         updateMediaExpansion();
+        mView.updateColumns();
     }
 
     @Override
