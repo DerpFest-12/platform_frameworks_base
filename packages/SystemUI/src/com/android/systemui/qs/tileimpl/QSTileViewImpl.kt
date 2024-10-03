@@ -32,6 +32,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.RippleDrawable
+import android.graphics.drawable.StateListDrawable
 import android.os.Trace
 import android.provider.Settings
 import android.service.quicksettings.Tile
@@ -837,10 +838,13 @@ constructor(
                 getBackgroundColorForState(state.state, state.disabledByPolicy)
             )
             if (allowAnimations) {
-                shapeAnimator.setFloatValues(
-                    (backgroundDrawable as GradientDrawable).cornerRadius,
-                    getCornerRadiusForState(state.state)
-                )
+                if (isRoundQS()) {
+                    for (i in 0 until backgroundOverlayDrawable.getStateCount()) {
+                        shapeAnimator.setFloatValues(
+                            (backgroundOverlayDrawable.getStateDrawable(i) as GradientDrawable).cornerRadius,
+                            getCornerRadiusForState(state.state))
+                    }
+                }
                 singleAnimator.setValues(
                     colorValuesHolder(
                         BACKGROUND_NAME,
@@ -971,8 +975,9 @@ constructor(
     }
 
     private fun setCornerRadius(cornerRadius: Float) {
-        val mBg = ripple.findDrawableByLayerId(R.id.background) as GradientDrawable
-        mBg.cornerRadius = cornerRadius
+        for (i in 0 until backgroundOverlayDrawable.getStateCount()) {
+            (backgroundOverlayDrawable.getStateDrawable(i) as GradientDrawable).cornerRadius = cornerRadius
+        }
     }
 
     private fun getCornerRadiusForState(state: Int): Float {
