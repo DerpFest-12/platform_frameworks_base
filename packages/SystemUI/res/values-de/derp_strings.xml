@@ -114,4 +114,8 @@
     <string name="usage_data">heute verbraucht</string>
     <string name="usage_data_default_suffix">Daten</string>
     <string name="usage_wifi_default_suffix">WLAN</string>
+
+    <!-- 4G icon -->
+    <string name="show_fourg_icon_title">4G-Symbol</string>
+    <string name="show_fourg_icon_summary">4G-Symbol anstelle von LTE anzeigen</string>
 </resources>
