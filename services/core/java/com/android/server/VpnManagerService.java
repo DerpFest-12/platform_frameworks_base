@@ -51,6 +51,7 @@ import android.os.Process;
 import android.os.ServiceManager;
 import android.os.UserHandle;
 import android.os.UserManager;
+import android.provider.Settings;
 import android.security.Credentials;
 import android.text.TextUtils;
 import android.util.Log;
@@ -912,6 +913,12 @@ public class VpnManagerService extends IVpnManager.Stub {
             }
 
             vpn.refreshPlatformVpnAppExclusionList();
+
+            if (TextUtils.equals(vpn.getPackage(), packageName) && userId == UserHandle.USER_SYSTEM
+                    && vpn.isGlobalVpn()) {
+                Settings.Global.putString(mContext.getContentResolver(),
+                        Settings.Global.GLOBAL_VPN_APP, "");
+            }
         }
     }
 
