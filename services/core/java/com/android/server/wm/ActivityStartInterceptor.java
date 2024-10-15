@@ -561,7 +561,9 @@ class ActivityStartInterceptor {
     private boolean interceptLockedAppIfNeeded() {
         if (getAppLockManagerService() == null) return false;
         final Intent interceptingIntent = getAppLockManagerService().interceptActivity(getInterceptorInfo(null));
-        if (interceptingIntent == null) return false;
+        if (interceptingIntent == null) {
+            return false;
+        }
         mIntent = interceptingIntent;
         mCallingPid = mRealCallingPid;
         mCallingUid = mRealCallingUid;
@@ -585,8 +587,15 @@ class ActivityStartInterceptor {
         if (mActivityOptions == null) {
             mActivityOptions = ActivityOptions.makeBasic();
         }
-        mRInfo = mSupervisor.resolveIntent(mIntent, mResolvedType, mUserId, 0,
-                mRealCallingUid, mRealCallingPid);
+
+        final UserInfo parent = mUserManager.getProfileParent(mUserId);
+        if (parent != null) {
+            mRInfo = mSupervisor.resolveIntent(mIntent, mResolvedType, parent.id, 0,
+                    mRealCallingUid, mRealCallingPid);
+        } else {
+            mRInfo = mSupervisor.resolveIntent(mIntent, mResolvedType, mUserId, 0,
+                    mRealCallingUid, mRealCallingPid);
+        }
         mAInfo = mSupervisor.resolveActivity(mIntent, mRInfo, mStartFlags, null /*profilerInfo*/);
         return true;
     }
