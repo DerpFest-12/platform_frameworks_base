@@ -17,30 +17,24 @@ package com.android.systemui.tuner;
 
 import android.os.Bundle;
 import android.os.UserHandle;
-import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.SwitchPreferenceCompat;
-import androidx.preference.Preference.OnPreferenceChangeListener;
 import android.provider.Settings;
 
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
 import com.android.systemui.res.R;
 
-public class StatusBarTuner extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
+public class StatusBarTuner extends PreferenceFragment {
 
     private static final String SHOW_FOURG = "show_fourg";
     private static final String KEY_STATUS_BAR_LOGO = "status_bar_logo";
-    private static final String KEY_STATUS_BAR_LOGO_POSITION = "status_bar_logo_position";
-    private static final String KEY_STATUS_BAR_LOGO_STYLE = "status_bar_logo_style";
 
     private MetricsLogger mMetricsLogger;
     private SwitchPreferenceCompat mShowFourG;
     private SwitchPreferenceCompat mShowDerpLogo;
-    private ListPreference mDerpLogoPosition;
-    private ListPreference mDerpLogoStyle;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -55,20 +49,6 @@ public class StatusBarTuner extends PreferenceFragment implements Preference.OnP
         mShowDerpLogo.setChecked(Settings.System.getIntForUser(getActivity().getContentResolver(),
             Settings.System.STATUS_BAR_LOGO, 0,
             UserHandle.USER_CURRENT) == 1);
-
-        mDerpLogoPosition = (ListPreference) findPreference(KEY_STATUS_BAR_LOGO_POSITION);
-        mDerpLogoPosition.setValue(String.valueOf(Settings.System.getIntForUser(
-                getActivity().getContentResolver(),
-                Settings.System.STATUS_BAR_LOGO_POSITION, 0,
-                UserHandle.USER_CURRENT)));
-        mDerpLogoPosition.setOnPreferenceChangeListener(this);
-
-        mDerpLogoStyle = (ListPreference) findPreference(KEY_STATUS_BAR_LOGO_STYLE);
-        mDerpLogoStyle.setValue(String.valueOf(Settings.System.getIntForUser(
-                getActivity().getContentResolver(),
-                Settings.System.STATUS_BAR_LOGO_STYLE, 0,
-                UserHandle.USER_CURRENT)));
-        mDerpLogoStyle.setOnPreferenceChangeListener(this);
     }
 
     @Override
@@ -90,7 +70,7 @@ public class StatusBarTuner extends PreferenceFragment implements Preference.OnP
     }
 
     @Override
-    public boolean onPreferenceChange(Preference preference, Object newValue) {
+    public boolean onPreferenceTreeClick(Preference preference) {
         if (preference == mShowFourG) {
             boolean checked = ((SwitchPreferenceCompat)preference).isChecked();
             Settings.System.putIntForUser(getActivity().getContentResolver(),
@@ -101,18 +81,6 @@ public class StatusBarTuner extends PreferenceFragment implements Preference.OnP
             boolean checked = ((SwitchPreferenceCompat)preference).isChecked();
             Settings.System.putIntForUser(getActivity().getContentResolver(),
                     Settings.System.STATUS_BAR_LOGO, checked ? 1 : 0,
-                    UserHandle.USER_CURRENT);
-            return true;
-        } else if (preference == mDerpLogoPosition) {
-            int value = Integer.parseInt((String) newValue);
-            Settings.System.putIntForUser(getActivity().getContentResolver(),
-                    Settings.System.STATUS_BAR_LOGO_POSITION, value,
-                    UserHandle.USER_CURRENT);
-            return true;
-        } else if (preference == mDerpLogoStyle) {
-            int value = Integer.parseInt((String) newValue);
-            Settings.System.putIntForUser(getActivity().getContentResolver(),
-                    Settings.System.STATUS_BAR_LOGO_STYLE, value,
                     UserHandle.USER_CURRENT);
             return true;
         }
